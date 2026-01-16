@@ -1,0 +1,41 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgis/postgis:17-3.6-alpine
+    container_name: logistic-postgres
+    restart: "no"
+    environment:
+      POSTGRES_USER: logistic_user
+      POSTGRES_PASSWORD: logistic_secret_2026
+      POSTGRES_DB: logistic_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U logistic_user -d logistic_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:8-alpine
+    container_name: logistic-redis
+    restart: "no"
+    command: redis-server --appendonly yes --requirepass redis_secret_2026
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "redis_secret_2026", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

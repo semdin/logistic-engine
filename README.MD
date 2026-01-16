@@ -1,1 +1,0 @@
-HELLO WORLD from Linux ZorinOS

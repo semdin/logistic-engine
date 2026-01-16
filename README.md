@@ -1,98 +1,170 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Logistic Engine
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A backend application for managing deliveries and vehicles. Built with NestJS, PostgreSQL, PostGIS, and Redis.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## What This Project Does
 
-## Description
+This project helps you:
+- Track delivery locations
+- Manage vehicle fleet
+- Calculate distances between points
+- Find nearest delivery points
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+| Technology | Purpose |
+|------------|---------|
+| **NestJS** | Backend framework |
+| **PostgreSQL** | Main database |
+| **PostGIS** | Geographic data support |
+| **Redis** | Caching |
+| **Drizzle ORM** | Database management |
+| **Docker** | Running services |
+
+## Getting Started
+
+### 1. Install Dependencies
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+### 2. Start Docker Services
+
+Make sure Docker is running on your computer. Then:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker compose up -d
 ```
 
-## Run tests
+This starts:
+- PostgreSQL database (port 5432)
+- Redis cache (port 6379)
+
+### 3. Push Database Schema
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run db:push
 ```
 
-## Deployment
+This creates the tables in the database.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 4. Run the Application
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+The app runs on `http://localhost:3000`
 
-## Resources
+## Database Tables
 
-Check out a few resources that may come in handy when working with NestJS:
+### Vehicles Table
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Stores information about delivery vehicles.
 
-## Support
+| Column | Type | Description |
+|--------|------|-------------|
+| id | serial | Unique ID |
+| name | text | Vehicle name or license plate |
+| capacity | double | Maximum load capacity |
+| start_location | geometry | Starting point (GPS coordinates) |
+| is_active | boolean | Is the vehicle available? |
+| created_at | timestamp | When it was created |
+| updated_at | timestamp | When it was last updated |
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Deliveries Table
 
-## Stay in touch
+Stores delivery orders.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| Column | Type | Description |
+|--------|------|-------------|
+| id | serial | Unique ID |
+| customer_name | text | Customer's name |
+| address | text | Delivery address |
+| weight | double | Package weight |
+| location | geometry | Delivery point (GPS coordinates) |
+| is_delivered | boolean | Is it delivered? |
+| created_at | timestamp | When it was created |
+| updated_at | timestamp | When it was last updated |
+
+## Project Structure
+
+```
+logistic-engine/
+├── src/
+│   ├── database/
+│   │   ├── schema/
+│   │   │   ├── index.ts        # Export all tables
+│   │   │   ├── vehicles.ts     # Vehicles table
+│   │   │   └── deliveries.ts   # Deliveries table
+│   │   └── index.ts            # Database connection
+│   ├── app.module.ts           # Main module
+│   ├── app.controller.ts       # Main controller
+│   ├── app.service.ts          # Main service
+│   └── main.ts                 # Entry point
+├── drizzle/                    # Migration files
+├── docker-compose.yml          # Docker services
+├── drizzle.config.ts           # Drizzle configuration
+└── package.json
+```
+
+## Available Commands
+
+### NPM Scripts
+
+| Command | What It Does |
+|---------|--------------|
+| `npm run start:dev` | Start app in development mode |
+| `npm run build` | Build for production |
+| `npm run start:prod` | Start production build |
+| `npm run db:push` | Push schema to database |
+| `npm run db:generate` | Generate migration files |
+| `npm run db:migrate` | Run migrations |
+| `npm run db:studio` | Open database viewer |
+
+### Docker Commands
+
+| Command | What It Does |
+|---------|--------------|
+| `docker compose up -d` | Start all services |
+| `docker compose down` | Stop all services |
+| `docker compose down -v` | Stop and delete data |
+| `docker ps` | Show running containers |
+
+## Environment Variables
+
+You can set these in a `.env` file:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| DB_HOST | localhost | Database host |
+| DB_PORT | 5432 | Database port |
+| DB_USER | logistic_user | Database user |
+| DB_PASSWORD | logistic_secret_2026 | Database password |
+| DB_NAME | logistic_db | Database name |
+
+## PostGIS Features
+
+This project uses PostGIS for geographic data. You can:
+
+- Store GPS coordinates as geometry points
+- Calculate distance between two points
+- Find all deliveries within a radius
+- Use spatial indexes for fast queries
+
+### Example: Insert a Location
+
+```typescript
+// Using geometry type with x (longitude) and y (latitude)
+await db.insert(vehicles).values({
+    name: "Truck 1",
+    capacity: 1000,
+    start_location: { x: 28.9784, y: 41.0082 }, // Istanbul
+    is_active: true,
+});
+```
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is private.
