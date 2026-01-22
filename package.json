@@ -23,7 +23,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:visualize": "npx drizzle-lab visualizer"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
