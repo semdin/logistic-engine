@@ -5,3 +5,4 @@ dist
 lectures.md
 .vscode
 .drizzle
+.cache
